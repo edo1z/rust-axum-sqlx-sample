@@ -4,6 +4,8 @@ use std::env;
 use tokio::sync::OnceCell;
 
 pub mod user;
+pub mod category;
+pub mod post;
 
 async fn init_pool() -> Pool<Postgres> {
     dotenv().ok();
