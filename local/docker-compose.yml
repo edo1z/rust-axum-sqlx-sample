@@ -1,14 +1,16 @@
 version: '3.7'
 services:
   db:
-    image: mysql:8.0.27
-    volumes:
-      - db_data:/var/lib/mysql
+    build: ./db
+    restart: always
     environment:
-      MYSQL_DATABASE: 'database'
-      MYSQL_ROOT_PASSWORD: 'password'
+      POSTGRES_DB: 'database'
+      POSTGRES_USER: 'user'
+      POSTGRES_PASSWORD: 'password'
     ports:
-      - "3310:3306"
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
   api:
       build: ./api
       ports:
