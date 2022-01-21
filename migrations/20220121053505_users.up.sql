@@ -1,0 +1,6 @@
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(30) NOT NULL,
+    msg VARCHAR(140),
+    age SMALLINT
+)
