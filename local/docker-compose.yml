@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  db:
+    image: mysql:8.0.27
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: 'database'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - "3310:3306"
+  api:
+      build: ./api
+      ports:
+        - '8085:8080'
+      depends_on:
+        - db
+      volumes:
+        - ..:/app
+        - cargo-cache:/app/target
+      command: /bin/sh -c "cargo watch -x run"
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8026:8025"
+      - "1026:1025"
+volumes:
+  db_data:
+  cargo-cache:
+  target-cache:
