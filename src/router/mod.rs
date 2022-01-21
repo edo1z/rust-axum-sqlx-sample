@@ -1,5 +1,5 @@
-use axum::{routing::get, Router};
 use crate::controllers;
+use axum::{routing::get, Router};
 
 pub fn router() -> Router {
     Router::new()
