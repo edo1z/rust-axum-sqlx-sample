@@ -5,7 +5,7 @@ pub async fn find_all(conditions: UserConditions) -> Result<Vec<User>, sqlx::Err
     let pool = get_db_pool().await;
     let mut query = sqlx::query_as::<_, User>("select * from users");
     if let Some(name) = conditions.name {
-        query = sqlx::query_as::<_, User>("select * from users where name = $1").bind(name)
+        query = sqlx::query_as::<_, User>("select * from users where name LIKE $1").bind(format!("%{}%", name))
     }
     query.fetch_all(pool).await
 }
