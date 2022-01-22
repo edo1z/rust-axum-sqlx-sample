@@ -17,3 +17,7 @@ sh migrate add -r users
 sh migrate run
 sh migrate revert
 ```
+
+## Swagger
+
+- http://localhost:8001
