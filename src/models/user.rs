@@ -9,6 +9,13 @@ pub struct User {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct CreateUser {
+    pub name: String,
+    pub msg: Option<String>,
+    pub age: Option<i16>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct UserConditions {
-    pub name: Option<String>
+    pub name: Option<String>,
 }

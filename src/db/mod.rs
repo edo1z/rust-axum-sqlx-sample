@@ -3,9 +3,9 @@ use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 use std::env;
 use tokio::sync::OnceCell;
 
-pub mod user;
 pub mod category;
 pub mod post;
+pub mod user;
 
 async fn init_pool() -> Pool<Postgres> {
     dotenv().ok();
