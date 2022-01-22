@@ -23,5 +23,5 @@ pub struct UserConditions {
 
 #[derive(Serialize, Deserialize, Debug, FromRow)]
 pub struct UserId {
-    pub id: i32
+    pub id: i32,
 }

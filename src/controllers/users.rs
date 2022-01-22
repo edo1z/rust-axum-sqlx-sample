@@ -1,5 +1,5 @@
 use crate::db;
-use crate::models::user::{User, UserConditions, CreateUser, UserId};
+use crate::models::user::{CreateUser, User, UserConditions, UserId};
 use axum::{extract, http::StatusCode, Json};
 
 pub async fn index(query: extract::Query<UserConditions>) -> Result<Json<Vec<User>>, StatusCode> {
@@ -12,7 +12,7 @@ pub async fn index(query: extract::Query<UserConditions>) -> Result<Json<Vec<Use
 }
 
 pub async fn add(json: extract::Json<CreateUser>) -> Result<Json<UserId>, StatusCode> {
-    let user_data  = json.0;
+    let user_data = json.0;
     let user_id = db::user::add(user_data).await.map_err(|err| {
         tracing::error!("Error user add: {}", err);
         StatusCode::INTERNAL_SERVER_ERROR

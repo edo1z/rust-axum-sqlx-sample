@@ -1,6 +1,6 @@
-use std::net::SocketAddr;
-use tower_http::cors::{CorsLayer, Origin, any};
 use axum::http::header::CONTENT_TYPE;
+use std::net::SocketAddr;
+use tower_http::cors::{any, CorsLayer, Origin};
 
 mod controllers;
 mod db;

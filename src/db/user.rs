@@ -18,7 +18,7 @@ pub async fn add(user_data: CreateUser) -> anyhow::Result<UserId> {
         INSERT INTO users (name, msg, age)
         VALUES ($1, $2, $3)
         RETURNING id
-        "#
+        "#,
     )
     .bind(user_data.name)
     .bind(user_data.msg)
