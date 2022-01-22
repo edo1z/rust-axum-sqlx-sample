@@ -1,5 +1,6 @@
 use std::net::SocketAddr;
 use tower_http::cors::{CorsLayer, Origin, any};
+use axum::http::header::CONTENT_TYPE;
 
 mod controllers;
 mod db;
@@ -23,4 +24,5 @@ fn cors() -> CorsLayer {
     CorsLayer::new()
         .allow_origin(Origin::exact(swagger_url.parse().unwrap()))
         .allow_methods(any())
+        .allow_headers(vec![CONTENT_TYPE])
 }

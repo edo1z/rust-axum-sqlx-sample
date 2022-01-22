@@ -1,5 +1,5 @@
 use crate::db::get_db_pool;
-use crate::models::user::{CreateUser, User, UserConditions};
+use crate::models::user::{CreateUser, User, UserConditions, UserId};
 
 pub async fn find_all(conditions: UserConditions) -> Result<Vec<User>, sqlx::Error> {
     let pool = get_db_pool().await;
@@ -11,8 +11,19 @@ pub async fn find_all(conditions: UserConditions) -> Result<Vec<User>, sqlx::Err
     query.fetch_all(pool).await
 }
 
-pub async fn add(user: CreateUser) -> Result<(), sqlx::Error> {
+pub async fn add(user_data: CreateUser) -> anyhow::Result<UserId> {
     let pool = get_db_pool().await;
-    println!("{:?}", user);
-    Ok(())
+    let row = sqlx::query_as::<_, UserId>(
+        r#"
+        INSERT INTO users (name, msg, age)
+        VALUES ($1, $2, $3)
+        RETURNING id
+        "#
+    )
+    .bind(user_data.name)
+    .bind(user_data.msg)
+    .bind(user_data.age)
+    .fetch_one(pool)
+    .await?;
+    Ok(row)
 }

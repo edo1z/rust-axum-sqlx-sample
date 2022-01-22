@@ -26,6 +26,24 @@ paths:
             type: "array"
             items: 
               $ref: "#/definitions/User"
+  /users/add:
+    post:
+      summary: add user
+      operationId: add_user
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "user info"
+          required: true
+          type: "object"
+          schema:
+              $ref: "#/definitions/CreateUser"
+      responses: 
+        '200':
+          description: return userId
+          schema:
+            type: "integer"
+            format: "int32"
 definitions:
   User: 
     type: "object"
@@ -40,4 +58,15 @@ definitions:
       age:
         type: "integer"
         format: "int16"
+  CreateUser:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      msg:
+        type: "string"
+      age:
+        type: "integer"
+        format: "int16"
+      
       
