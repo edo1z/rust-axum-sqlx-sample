@@ -1,0 +1,18 @@
+post:
+  tags:
+    - "post"
+  summary: add post
+  operationId: add_post
+  requestBody:
+    description: "post info"
+    content: 
+      application/json:
+        schema:
+            $ref: "../../schemas/post.yaml#/CreatePost"
+  responses: 
+    '200':
+      description: return postId
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/post.yaml#/PostId"

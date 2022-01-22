@@ -1,0 +1,23 @@
+Category: 
+  type: "object"
+  properties:
+    id:
+      type: "integer"
+      format: "int32"
+    name:
+      type: "string"
+
+CreateCategory:
+  required: 
+  - name
+  type: "object"
+  properties:
+    name:
+      type: "string"
+    
+CategoryId:
+  type: "object"
+  properties:
+    id:
+      type: "integer"
+      format: "int32"

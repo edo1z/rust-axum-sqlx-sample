@@ -1,0 +1,20 @@
+get:
+  tags: 
+    - "category"
+  summary: get 10 categories
+  operationId: get_categores
+  parameters:
+    - name: "name"
+      in: "query"
+      description: "category name"
+      required: false
+      type: "string"
+  responses: 
+    '200':
+      description: return categories
+      content:
+        application/json:
+          schema:
+            type: "array"
+            items: 
+              $ref: "../../schemas/category.yaml#/Category"

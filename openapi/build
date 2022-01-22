@@ -1,0 +1,1 @@
+swagger-cli bundle -o openapi.yaml -t yaml openapi/base.yaml

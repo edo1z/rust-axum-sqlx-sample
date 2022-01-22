@@ -1,0 +1,18 @@
+post:
+  tags:
+    - "category"
+  summary: add category
+  operationId: add_category
+  requestBody:
+    description: "category info"
+    content: 
+      application/json:
+        schema:
+            $ref: "../../schemas/category.yaml#/CreateCategory"
+  responses: 
+    '200':
+      description: return categoryId
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/category.yaml#/CategoryId"

@@ -1,0 +1,41 @@
+Post: 
+  type: "object"
+  properties:
+    id:
+      type: "integer"
+      format: "int32"
+    user_id:
+      type: "integer"
+      format: "int32"
+    category_id:
+      type: "integer"
+      format: "int32"
+    title:
+      type: "string"
+    content:
+      type: "string"
+
+CreatePost:
+  required: 
+  - user_id
+  - category_id
+  - title
+  type: "object"
+  properties:
+    user_id:
+      type: "integer"
+      format: "int32"
+    category_id:
+      type: "integer"
+      format: "int32"
+    title:
+      type: "string"
+    content:
+      type: "string"
+    
+PostId:
+  type: "object"
+  properties:
+    id:
+      type: "integer"
+      format: "int32"

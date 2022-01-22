@@ -1,0 +1,31 @@
+openapi: '3.0.1'
+info:
+  title: 'Rust Axum+SQLx Sample'
+  description: ''
+  version: 0.0.1
+servers:
+  - url: http://localhost:8085
+schemes: 
+  - http
+produces:
+  - application/json
+tags:
+  - name: user
+  - name: category
+  - name: post
+paths:
+  "/users":
+    $ref: "./paths/users/index.yaml"
+  "/users/add":
+    $ref: "./paths/users/add.yaml"
+  "/categories":
+    $ref: "./paths/categories/index.yaml"
+  "/categories/add":
+    $ref: "./paths/categories/add.yaml"
+  "/posts":
+    $ref: "./paths/posts/index.yaml"
+  "/posts/add":
+    $ref: "./paths/posts/add.yaml"
+components:
+  schemas:
+    $ref: "./schemas/index.yaml"

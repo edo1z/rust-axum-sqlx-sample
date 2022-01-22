@@ -1,0 +1,18 @@
+post:
+  tags:
+    - "user"
+  summary: add user
+  operationId: add_user
+  requestBody:
+    description: "user info"
+    content: 
+      application/json:
+        schema:
+            $ref: "../../schemas/user.yaml#/CreateUser"
+  responses: 
+    '200':
+      description: return userId
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/user.yaml#/UserId"

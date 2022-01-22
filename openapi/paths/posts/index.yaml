@@ -1,0 +1,20 @@
+get:
+  tags: 
+    - "post"
+  summary: get 10 posts
+  operationId: get_posts
+  parameters:
+    - name: "title"
+      in: "query"
+      description: "post title"
+      required: false
+      type: "string"
+  responses: 
+    '200':
+      description: return posts
+      content:
+        application/json:
+          schema:
+            type: "array"
+            items: 
+              $ref: "../../schemas/post.yaml#/Post"

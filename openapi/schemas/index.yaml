@@ -1,0 +1,6 @@
+user:
+  $ref: "./user.yaml"
+category:
+  $ref: "./category.yaml"
+post:
+  $ref: "./post.yaml"
