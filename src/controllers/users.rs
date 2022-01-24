@@ -20,3 +20,16 @@ pub async fn edit() -> StatusCode {
 pub async fn delete() -> StatusCode {
     StatusCode::OK
 }
+
+#[cfg(test)]
+mod tests {
+    // use super::*;
+    // use crate::router;
+    // use axum::{body::Body, http::{Request, StatusCode}};
+    // use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn index() {
+        assert_eq!(1, 0);
+    }
+}
