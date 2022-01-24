@@ -1,22 +1,15 @@
 use crate::db;
-use crate::models::user::{CreateUser, User, UserConditions, UserId};
-use axum::{extract, http::StatusCode, Json};
+use crate::error::Result;
+use crate::models::user::{CreateUser, UserConditions, UserId, UserList};
+use axum::{extract::Query, http::StatusCode, Json};
 
-pub async fn index(query: extract::Query<UserConditions>) -> Result<Json<Vec<User>>, StatusCode> {
-    let user_conditions = query.0;
-    let users = db::user::find_all(user_conditions).await.map_err(|err| {
-        tracing::error!("Error find all users: {}", err);
-        StatusCode::INTERNAL_SERVER_ERROR
-    })?;
+pub async fn index(Query(conditions): Query<UserConditions>) -> Result<Json<UserList>> {
+    let users = db::user::find_all(conditions).await?;
     Ok(Json(users))
 }
 
-pub async fn add(json: extract::Json<CreateUser>) -> Result<Json<UserId>, StatusCode> {
-    let user_data = json.0;
-    let user_id = db::user::add(user_data).await.map_err(|err| {
-        tracing::error!("Error user add: {}", err);
-        StatusCode::INTERNAL_SERVER_ERROR
-    })?;
+pub async fn add(Json(user_data): Json<CreateUser>) -> Result<Json<UserId>> {
+    let user_id = db::user::add(user_data).await?;
     Ok(Json(user_id))
 }
 

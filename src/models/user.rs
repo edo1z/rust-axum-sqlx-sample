@@ -9,6 +9,8 @@ pub struct User {
     pub age: Option<i16>,
 }
 
+pub type UserList = Vec<User>;
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct CreateUser {
     pub name: String,

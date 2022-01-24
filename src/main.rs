@@ -6,6 +6,7 @@ mod controllers;
 mod db;
 mod models;
 mod router;
+mod error;
 
 #[tokio::main]
 async fn main() {
