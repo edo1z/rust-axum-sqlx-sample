@@ -9,7 +9,10 @@ pub async fn root() -> &'static str {
 #[cfg(test)]
 mod tests {
     use crate::router;
-    use axum::{body::Body, http::{Request, StatusCode}};
+    use axum::{
+        body::Body,
+        http::{Request, StatusCode},
+    };
     use tower::ServiceExt;
 
     #[tokio::test]

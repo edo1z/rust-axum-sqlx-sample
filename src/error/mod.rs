@@ -1,6 +1,10 @@
-use thiserror::Error;
-use axum::{http::StatusCode, response::{IntoResponse, Response}, Json};
+use axum::{
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    Json,
+};
 use serde_json::json;
+use thiserror::Error;
 
 pub type Result<T, E = AppError> = core::result::Result<T, E>;
 
@@ -11,7 +15,7 @@ pub enum AppError {
     #[error("Invalid params: {0:?}")]
     InvalidParams(Vec<String>),
     #[error(transparent)]
-    Other(#[from] anyhow::Error)
+    Other(#[from] anyhow::Error),
 }
 
 impl IntoResponse for AppError {

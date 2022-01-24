@@ -3,10 +3,10 @@ use std::net::SocketAddr;
 use tower_http::cors::{any, CorsLayer, Origin};
 
 mod controllers;
-mod db;
-mod models;
-mod router;
 mod error;
+mod models;
+mod repositories;
+mod router;
 
 #[tokio::main]
 async fn main() {
