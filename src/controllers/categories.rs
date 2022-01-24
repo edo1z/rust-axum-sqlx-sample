@@ -1,26 +1,17 @@
 use crate::db;
-use crate::models::category::{Category, CategoryConditions, CategoryId, CreateCategory};
-use axum::{extract, http::StatusCode, Json};
+use crate::error::Result;
+use crate::models::category::{CategoryList, CategoryConditions, CategoryId, CreateCategory};
+use axum::{extract::Query, http::StatusCode, Json};
 
 pub async fn index(
-    query: extract::Query<CategoryConditions>,
-) -> Result<Json<Vec<Category>>, StatusCode> {
-    let category_conditions = query.0;
-    let categories = db::category::find_all(category_conditions)
-        .await
-        .map_err(|err| {
-            tracing::error!("Error find all categories: {}", err);
-            StatusCode::INTERNAL_SERVER_ERROR
-        })?;
+    Query(conditions): Query<CategoryConditions>
+) -> Result<Json<CategoryList>> {
+    let categories = db::category::find_all(conditions).await?;
     Ok(Json(categories))
 }
 
-pub async fn add(json: extract::Json<CreateCategory>) -> Result<Json<CategoryId>, StatusCode> {
-    let category_data = json.0;
-    let category_id = db::category::add(category_data).await.map_err(|err| {
-        tracing::error!("Error category add: {}", err);
-        StatusCode::INTERNAL_SERVER_ERROR
-    })?;
+pub async fn add(Json(category_data): Json<CreateCategory>) -> Result<Json<CategoryId>> {
+    let category_id = db::category::add(category_data).await?;
     Ok(Json(category_id))
 }
 

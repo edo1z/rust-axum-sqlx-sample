@@ -7,6 +7,8 @@ pub struct Category {
     pub name: String,
 }
 
+pub type CategoryList = Vec<Category>;
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct CreateCategory {
     pub name: String,
