@@ -1,24 +1,25 @@
-use dotenv::dotenv;
-use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
-use std::env;
-use tokio::sync::OnceCell;
+use crate::db::postgres;
+use crate::repositories::{category::CategoryRepo, post::PostRepo, user::UserRepo};
+use std::sync::Arc;
+use axum::{extract::Extension};
 
 pub mod category;
 pub mod post;
 pub mod user;
 
-async fn init_pool() -> Pool<Postgres> {
-    dotenv().ok();
-    let db_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    PgPoolOptions::new()
-        .max_connections(5)
-        .connect(&db_url)
-        .await
-        .expect("Error connecting to database")
+pub type RepoExt = Extension<Arc<Repositories>>;
+
+pub struct Repositories {
+    pub user: UserRepo,
+    pub category: CategoryRepo,
+    pub post: PostRepo,
 }
 
-static DB_POOL: OnceCell<Pool<Postgres>> = OnceCell::const_new();
-
-pub async fn get_db_pool() -> &'static Pool<Postgres> {
-    DB_POOL.get_or_init(init_pool).await
+pub async fn create_repositories() -> Repositories {
+    let db_pool = Arc::new(postgres::db_connect().await);
+    Repositories {
+        user: UserRepo::new(db_pool.clone()),
+        category: CategoryRepo::new(db_pool.clone()),
+        post: PostRepo::new(db_pool.clone()),
+    }
 }

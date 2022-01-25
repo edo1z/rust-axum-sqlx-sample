@@ -1,10 +1,10 @@
 use crate::error::Result;
 use crate::models::post::PostList;
-use crate::repositories::post::PostRepo;
-use axum::{http::StatusCode, Json};
+use crate::repositories::{post::PostRepository, RepoExt};
+use axum::{extract::Extension, http::StatusCode, Json};
 
-pub async fn index() -> Result<Json<PostList>> {
-    let posts = PostRepo::find_all().await?;
+pub async fn index(Extension(repo): RepoExt) -> Result<Json<PostList>> {
+    let posts = repo.post.find_all().await?;
     Ok(Json(posts))
 }
 

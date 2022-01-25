@@ -1,4 +1,4 @@
-use crate::controllers;
+use crate::controllers::{categories, posts, root, users};
 use axum::{
     routing::{get, post},
     Router,
@@ -6,7 +6,7 @@ use axum::{
 
 pub fn router() -> Router {
     Router::new()
-        .route("/", get(controllers::root))
+        .route("/", get(root))
         .nest("/users", user_routes())
         .nest("/categories", category_routes())
         .nest("/posts", post_routes())
@@ -14,24 +14,24 @@ pub fn router() -> Router {
 
 fn user_routes() -> Router {
     Router::new()
-        .route("/", get(controllers::users::index))
-        .route("/add", post(controllers::users::add))
-        .route("/edit", post(controllers::users::edit))
-        .route("/delete", post(controllers::users::delete))
+        .route("/", get(users::index))
+        .route("/add", post(users::add))
+        .route("/edit", post(users::edit))
+        .route("/delete", post(users::delete))
 }
 
 fn category_routes() -> Router {
     Router::new()
-        .route("/", get(controllers::categories::index))
-        .route("/add", post(controllers::categories::add))
-        .route("/edit", post(controllers::categories::edit))
-        .route("/delete", post(controllers::categories::delete))
+        .route("/", get(categories::index))
+        .route("/add", post(categories::add))
+        .route("/edit", post(categories::edit))
+        .route("/delete", post(categories::delete))
 }
 
 fn post_routes() -> Router {
     Router::new()
-        .route("/", get(controllers::posts::index))
-        .route("/add", post(controllers::posts::add))
-        .route("/edit", post(controllers::posts::edit))
-        .route("/delete", post(controllers::posts::delete))
+        .route("/", get(posts::index))
+        .route("/add", post(posts::add))
+        .route("/edit", post(posts::edit))
+        .route("/delete", post(posts::delete))
 }

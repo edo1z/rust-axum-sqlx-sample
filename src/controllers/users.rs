@@ -1,15 +1,25 @@
 use crate::error::Result;
 use crate::models::user::{CreateUser, UserConditions, UserId, UserList};
-use crate::repositories::user::UserRepo;
-use axum::{extract::Query, http::StatusCode, Json};
+use crate::repositories::{user::UserRepository, RepoExt};
+use axum::{
+    extract::{Extension, Query},
+    http::StatusCode,
+    Json,
+};
 
-pub async fn index(Query(conditions): Query<UserConditions>) -> Result<Json<UserList>> {
-    let users = UserRepo::find_all(conditions).await?;
+pub async fn index(
+    Query(conditions): Query<UserConditions>,
+    Extension(repo): RepoExt,
+) -> Result<Json<UserList>> {
+    let users = repo.user.find_all(&conditions).await?;
     Ok(Json(users))
 }
 
-pub async fn add(Json(user_data): Json<CreateUser>) -> Result<Json<UserId>> {
-    let user_id = UserRepo::add(user_data).await?;
+pub async fn add(
+    Json(user_data): Json<CreateUser>,
+    Extension(repo): RepoExt,
+) -> Result<Json<UserId>> {
+    let user_id = repo.user.add(&user_data).await?;
     Ok(Json(user_id))
 }
 
@@ -24,7 +34,7 @@ pub async fn delete() -> StatusCode {
 #[cfg(test)]
 mod tests {
     // use super::*;
-    // use crate::router;
+    // use crate::{router, repositories::user::MockUserRepo, models::user::User};
     // use axum::{body::Body, http::{Request, StatusCode}};
     // use tower::ServiceExt;
 
