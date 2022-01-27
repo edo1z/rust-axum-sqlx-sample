@@ -7,6 +7,7 @@ mod error;
 mod models;
 mod repositories;
 mod router;
+mod test;
 
 #[tokio::main]
 async fn main() {

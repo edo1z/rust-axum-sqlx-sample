@@ -9,19 +9,13 @@ pub async fn root() -> &'static str {
 #[cfg(test)]
 mod tests {
     use crate::router;
-    use axum::{
-        body::Body,
-        http::{Request, StatusCode},
-    };
-    use tower::ServiceExt;
+    use crate::test::request;
+    use axum::{body::Body, http::StatusCode};
 
     #[tokio::test]
     async fn index() {
         let app = router::router();
-        let response = app
-            .oneshot(Request::builder().uri("/").body(Body::empty()).unwrap())
-            .await
-            .unwrap();
+        let response = request(app, "/", Body::empty()).await;
         assert_eq!(response.status(), StatusCode::OK);
     }
 }

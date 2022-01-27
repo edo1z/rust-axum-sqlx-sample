@@ -1,6 +1,6 @@
 use crate::error::Result;
 use crate::models::category::{CategoryConditions, CategoryId, CategoryList, CreateCategory};
-use crate::repositories::{category::CategoryRepository, RepoExt};
+use crate::repositories::{category::CategoryRepo, RepoExt, Repositories};
 use axum::{
     extract::{Extension, Query},
     http::StatusCode,
@@ -11,7 +11,7 @@ pub async fn index(
     Query(conditions): Query<CategoryConditions>,
     Extension(repo): RepoExt,
 ) -> Result<Json<CategoryList>> {
-    let categories = repo.category.find_all(&conditions).await?;
+    let categories = repo.category().find_all(&conditions).await?;
     Ok(Json(categories))
 }
 
@@ -19,7 +19,7 @@ pub async fn add(
     Json(category_data): Json<CreateCategory>,
     Extension(repo): RepoExt,
 ) -> Result<Json<CategoryId>> {
-    let category_id = repo.category.add(&category_data).await?;
+    let category_id = repo.category().add(&category_data).await?;
     Ok(Json(category_id))
 }
 

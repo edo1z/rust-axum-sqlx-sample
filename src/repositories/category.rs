@@ -5,24 +5,26 @@ use crate::models::category::{
 };
 use anyhow::Context;
 use async_trait::async_trait;
+use mockall::automock;
 
-pub struct CategoryRepo {
+pub struct CategoryRepoImpl {
     pool: Db,
 }
-impl CategoryRepo {
+impl CategoryRepoImpl {
     pub fn new(pool: Db) -> Self {
         Self { pool: pool }
     }
 }
 
+#[automock]
 #[async_trait]
-pub trait CategoryRepository {
+pub trait CategoryRepo {
     async fn find_all(&self, conditions: &CategoryConditions) -> Result<CategoryList>;
     async fn add(&self, category_data: &CreateCategory) -> Result<CategoryId>;
 }
 
 #[async_trait]
-impl CategoryRepository for CategoryRepo {
+impl CategoryRepo for CategoryRepoImpl {
     async fn find_all(&self, conditions: &CategoryConditions) -> Result<CategoryList> {
         let mut query = sqlx::query_as::<_, Category>("select * from categories");
         if let Some(name) = &conditions.name {
