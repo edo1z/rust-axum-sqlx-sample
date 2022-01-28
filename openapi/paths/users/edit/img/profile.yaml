@@ -4,15 +4,14 @@ post:
   summary: upload profile image
   operationId: edit_user_image_profile
   requestBody:
-    description: "Edit user image profile"
-    content: 
-      application/json:
+    content:
+      multipart/form-data:
         schema:
-            $ref: "../../../../schemas/user.yaml#/NewUser"
+          $ref: "../../../../schemas/user.yaml#/ProfImg"
   responses: 
     '200':
       description: return userId
       content:
         application/json:
           schema:
-            $ref: "../../../../schemas/user.yaml#/UserId"
+            $ref: "../../../../schemas/user.yaml#/ImgUrl"

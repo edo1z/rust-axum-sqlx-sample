@@ -73,25 +73,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/user/UserId'
-  /users/edit/image/profile:
+  /users/edit/img/prof:
     post:
       tags:
         - user
       summary: upload profile image
       operationId: edit_user_image_profile
       requestBody:
-        description: Edit user image profile
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/user/NewUser'
+              $ref: '#/components/schemas/user/ProfImg'
       responses:
         '200':
           description: return userId
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user/UserId'
+                $ref: '#/components/schemas/user/ImgUrl'
   /categories:
     get:
       tags:
@@ -179,13 +178,17 @@ components:
         type: object
         properties:
           id:
+            required: true
             type: integer
             format: int32
           name:
+            required: true
             type: string
           msg:
+            required: false
             type: string
           age:
+            required: false
             type: integer
             format: int16
       NewUser:
@@ -206,6 +209,22 @@ components:
           id:
             type: integer
             format: int32
+      ProfImg:
+        type: object
+        properties:
+          userId:
+            required: true
+            type: integer
+            format: int32
+          fileName:
+            required: true
+            type: string
+            format: binary
+      ImgUrl:
+        type: object
+        properties:
+          url:
+            type: string
     category:
       Category:
         type: object

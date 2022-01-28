@@ -1,5 +1,5 @@
 use crate::error::Result;
-use crate::models::user::{UserConditions, UserList};
+use crate::models::user::{ImgUrl, NewUser, ProfImg, User, UserConditions, UserId, UserList};
 use crate::repositories::{user::UserRepo, Repositories};
 use std::sync::Arc;
 
@@ -11,13 +11,21 @@ pub async fn search<R: Repositories>(
     Ok(users)
 }
 
-// pub async fn view() {}
+pub async fn view<R: Repositories>(repo: Arc<R>, user_id: i32) -> Result<User> {
+    let user = repo.user().find_by_id(user_id).await?;
+    Ok(user)
+}
 
-// pub async fn add() {}
+pub async fn add<R: Repositories>(repo: Arc<R>, new_user: &NewUser) -> Result<UserId> {
+    let user_id = repo.user().add(&new_user).await?;
+    Ok(user_id)
+}
 
-// pub async fn edit() {}
-
-// pub async fn delete() {}
+pub async fn edit_prof_img<R: Repositories>(_repo: Arc<R>, _prof_img: &ProfImg) -> Result<ImgUrl> {
+    Ok(ImgUrl {
+        url: String::from("https://example.com/hoge.png"),
+    })
+}
 
 #[cfg(test)]
 mod tests {

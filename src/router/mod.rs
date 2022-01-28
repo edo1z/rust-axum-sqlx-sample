@@ -18,7 +18,7 @@ fn user_routes() -> Router {
         .route("/view/:user_id", get(users::view))
         .route("/add", post(users::add))
         .route("/edit", post(users::edit))
-        .route("/edit/img/profile", post(users::edit_profile_img))
+        .route("/edit/img/prof", post(users::edit_prof_img))
         .route("/delete", post(users::delete))
 }
 

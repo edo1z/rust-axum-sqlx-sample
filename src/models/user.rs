@@ -29,7 +29,7 @@ pub struct UserId {
 }
 
 #[derive(Serialize, Deserialize, Debug, FromRow)]
-pub struct ProfileImage {
+pub struct ProfImg {
     pub user_id: i32,
     pub base64_img: String,
 }

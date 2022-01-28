@@ -20,7 +20,7 @@ paths:
     $ref: "./paths/users/view.yaml"
   "/users/add":
     $ref: "./paths/users/add.yaml"
-  "/users/edit/image/profile":
+  "/users/edit/img/prof":
     $ref: "./paths/users/edit/img/profile.yaml"
   "/categories":
     $ref: "./paths/categories/index.yaml"
