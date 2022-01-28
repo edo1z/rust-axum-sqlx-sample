@@ -1,5 +1,6 @@
 use crate::models::post::Post;
 
+#[allow(dead_code)]
 pub fn post_fixture(id: usize) -> Post {
     Post {
         id: id as i32,
@@ -10,6 +11,7 @@ pub fn post_fixture(id: usize) -> Post {
     }
 }
 
+#[allow(dead_code)]
 pub fn posts_fixture(num: usize) -> Vec<Post> {
     let mut posts = vec![];
     for i in 1..num + 1 {

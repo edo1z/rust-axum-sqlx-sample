@@ -35,6 +35,25 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/user/User'
+  '/users/view/{userId}':
+    get:
+      tags:
+        - user
+      summary: view user
+      operationId: view_users
+      parameters:
+        - name: id
+          in: path
+          description: user id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: return users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user/User'
   /users/add:
     post:
       tags:
@@ -46,7 +65,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/user/CreateUser'
+              $ref: '#/components/schemas/user/NewUser'
+      responses:
+        '200':
+          description: return userId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user/UserId'
+  /users/edit/image/profile:
+    post:
+      tags:
+        - user
+      summary: upload profile image
+      operationId: edit_user_image_profile
+      requestBody:
+        description: Edit user image profile
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user/NewUser'
       responses:
         '200':
           description: return userId
@@ -150,7 +188,7 @@ components:
           age:
             type: integer
             format: int16
-      CreateUser:
+      NewUser:
         required:
           - name
         type: object

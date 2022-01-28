@@ -12,7 +12,7 @@ User:
       type: "integer"
       format: "int16"
 
-CreateUser:
+NewUser:
   required: 
   - name
   type: "object"

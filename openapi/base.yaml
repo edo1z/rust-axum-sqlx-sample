@@ -16,8 +16,12 @@ tags:
 paths:
   "/users":
     $ref: "./paths/users/index.yaml"
+  "/users/view/{userId}":
+    $ref: "./paths/users/view.yaml"
   "/users/add":
     $ref: "./paths/users/add.yaml"
+  "/users/edit/image/profile":
+    $ref: "./paths/users/edit/img/profile.yaml"
   "/categories":
     $ref: "./paths/categories/index.yaml"
   "/categories/add":

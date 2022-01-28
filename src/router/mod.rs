@@ -15,14 +15,17 @@ pub fn router() -> Router {
 fn user_routes() -> Router {
     Router::new()
         .route("/", get(users::index))
+        .route("/view/:user_id", get(users::view))
         .route("/add", post(users::add))
         .route("/edit", post(users::edit))
+        .route("/edit/img/profile", post(users::edit_profile_img))
         .route("/delete", post(users::delete))
 }
 
 fn category_routes() -> Router {
     Router::new()
         .route("/", get(categories::index))
+        .route("/view/:category_id", get(categories::view))
         .route("/add", post(categories::add))
         .route("/edit", post(categories::edit))
         .route("/delete", post(categories::delete))
@@ -31,6 +34,7 @@ fn category_routes() -> Router {
 fn post_routes() -> Router {
     Router::new()
         .route("/", get(posts::index))
+        .route("/view/:post_id", get(posts::view))
         .route("/add", post(posts::add))
         .route("/edit", post(posts::edit))
         .route("/delete", post(posts::delete))

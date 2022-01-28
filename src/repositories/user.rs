@@ -1,6 +1,6 @@
 use crate::db::postgres::Db;
 use crate::error::Result;
-use crate::models::user::{CreateUser, User, UserConditions, UserId, UserList};
+use crate::models::user::{NewUser, User, UserConditions, UserId, UserList};
 use anyhow::Context;
 use async_trait::async_trait;
 use mockall::automock;
@@ -18,7 +18,8 @@ impl UserRepoImpl {
 #[async_trait]
 pub trait UserRepo {
     async fn find_all(&self, conditions: &UserConditions) -> Result<UserList>;
-    async fn add(&self, user_data: &CreateUser) -> Result<UserId>;
+    async fn add(&self, user_data: &NewUser) -> Result<UserId>;
+    async fn find_by_id(&self, user_id: i32) -> Result<User>;
 }
 
 #[async_trait]
@@ -36,7 +37,7 @@ impl UserRepo for UserRepoImpl {
         Ok(result)
     }
 
-    async fn add(&self, user_data: &CreateUser) -> Result<UserId> {
+    async fn add(&self, user_data: &NewUser) -> Result<UserId> {
         let row = sqlx::query_as::<_, UserId>(
             r#"
             INSERT INTO users (name, msg, age)
@@ -50,6 +51,15 @@ impl UserRepo for UserRepoImpl {
         .fetch_one(&*self.pool)
         .await
         .context("DB ERROR (create user)")?;
+        Ok(row)
+    }
+
+    async fn find_by_id(&self, user_id: i32) -> Result<User> {
+        let row = sqlx::query_as::<_, User>("select * from users where id = $1")
+            .bind(user_id)
+            .fetch_one(&*self.pool)
+            .await
+            .context("DB ERROR (find user by id)")?;
         Ok(row)
     }
 }

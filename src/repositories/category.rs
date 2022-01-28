@@ -21,6 +21,7 @@ impl CategoryRepoImpl {
 pub trait CategoryRepo {
     async fn find_all(&self, conditions: &CategoryConditions) -> Result<CategoryList>;
     async fn add(&self, category_data: &CreateCategory) -> Result<CategoryId>;
+    async fn find_by_id(&self, category_id: i32) -> Result<Category>;
 }
 
 #[async_trait]
@@ -50,6 +51,15 @@ impl CategoryRepo for CategoryRepoImpl {
         .fetch_one(&*self.pool)
         .await
         .context("DB ERROR (create category)")?;
+        Ok(row)
+    }
+
+    async fn find_by_id(&self, category_id: i32) -> Result<Category> {
+        let row = sqlx::query_as::<_, Category>("select * from categories where id = $1")
+            .bind(category_id)
+            .fetch_one(&*self.pool)
+            .await
+            .context("DB ERROR (find category by id)")?;
         Ok(row)
     }
 }

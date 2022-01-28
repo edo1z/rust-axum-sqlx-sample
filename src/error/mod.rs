@@ -10,8 +10,10 @@ pub type Result<T, E = AppError> = core::result::Result<T, E>;
 
 #[derive(Debug, Error)]
 pub enum AppError {
+    #[allow(dead_code)]
     #[error("Not Found: {0}")]
     NotFound(String),
+    #[allow(dead_code)]
     #[error("Invalid params: {0:?}")]
     InvalidParams(Vec<String>),
     #[error(transparent)]
