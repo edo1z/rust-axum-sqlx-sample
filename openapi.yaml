@@ -42,7 +42,7 @@ paths:
       summary: view user
       operationId: view_users
       parameters:
-        - name: id
+        - name: userId
           in: path
           description: user id
           required: true
