@@ -1,12 +1,17 @@
-use crate::error::Result;
+use crate::error::{Result, AppError};
 use crate::models::user::{ImgUrl, NewUser, ProfImg, User, UserConditions, UserId, UserList};
 use crate::repositories::RepoExt;
 use crate::usecases;
 use axum::{
-    extract::{Extension, Path, Query},
+    extract::{Extension, Path, Query, Multipart},
     http::StatusCode,
     Json,
 };
+
+use image::{ImageFormat, guess_format};
+use std::io::Cursor;
+use std::fs::File;
+use exif::{In, Reader, Tag};
 
 pub async fn index(
     Query(conditions): Query<UserConditions>,
@@ -27,11 +32,47 @@ pub async fn add(Json(new_user): Json<NewUser>, Extension(repo): RepoExt) -> Res
 }
 
 pub async fn edit_prof_img(
-    Json(prof_img): Json<ProfImg>,
+    mut multipart: Multipart,
     Extension(repo): RepoExt,
-) -> Result<Json<ImgUrl>> {
-    let img_url = usecases::users::edit_prof_img(repo.clone(), &prof_img).await?;
-    Ok(Json(img_url))
+) -> Result<Json<User>> {
+    if let Some(field) = multipart.next_field().await.unwrap() {
+        let name = field.name().unwrap().to_string();
+        let data = field.bytes().await.unwrap();
+        println!("{name}: {:?}", data);
+    }
+
+    if let Some(field) = multipart.next_field().await.unwrap() {
+        let data = field.bytes().await.unwrap();
+        let bytes:Vec<u8> = data.into_iter().collect();
+        let (format, ext) = match guess_format(&bytes) {
+            Ok(ImageFormat::Png) => Ok((ImageFormat::Png, "png")),
+            Ok(ImageFormat::Jpeg) => Ok((ImageFormat::Jpeg, "jpg")),
+            Ok(ImageFormat::Gif) => Ok((ImageFormat::Gif, "gif")),
+            _ => Err(AppError::InvalidFileFormat),
+        }?;
+        let mut buf = Cursor::new(&bytes);
+        let mut orientation = 1;
+        if let Ok(exif) = Reader::new().read_from_container(&mut buf) {
+            if let Some(o) = exif.get_field(Tag::Orientation, In::PRIMARY) {
+                if let Some(v @ 1..=8) = o.value.get_uint(0) {
+                    orientation = v;
+                }
+            }
+        }
+        println!("{orientation}");
+        match image::load_from_memory_with_format(&bytes, format) {
+            Ok(img) => {
+                let new_img = img.thumbnail(300, 300).blur(2.0);
+                let mut output = File::create(format!("new_img.{ext}")).unwrap();
+                new_img.write_to(&mut output, format).unwrap();
+            }
+            Err(_) => {
+                println!("Invalid File");
+            }
+        }
+    }
+    let user = usecases::users::view(repo.clone(), 10).await?;
+    Ok(Json(user))
 }
 
 pub async fn edit() -> StatusCode {

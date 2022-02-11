@@ -212,11 +212,11 @@ components:
       ProfImg:
         type: object
         properties:
-          userId:
+          user_id:
             required: true
             type: integer
             format: int32
-          fileName:
+          prof_img:
             required: true
             type: string
             format: binary
