@@ -1,6 +1,6 @@
 use crate::error::{AppError, Result};
 use exif::{In, Reader, Tag};
-use image::{guess_format, ImageFormat};
+use image::{guess_format, ImageFormat, DynamicImage};
 use std::fs::File;
 use std::io::Cursor;
 use uuid::Uuid;
@@ -12,7 +12,8 @@ pub fn img_upload(img_bytes: Vec<u8>, save_path:&'static str) -> Result<()> {
     let file_name = create_file_name(&ext);
     match image::load_from_memory_with_format(&img_bytes, format) {
         Ok(img) => {
-            let new_img = img.thumbnail(300, 300).blur(2.0);
+            let mut new_img = img.thumbnail(300, 300);
+            new_img = img_rotate(new_img, orientation);
             let mut output = File::create(file_name).unwrap();
             new_img.write_to(&mut output, format).unwrap();
         }
@@ -21,8 +22,19 @@ pub fn img_upload(img_bytes: Vec<u8>, save_path:&'static str) -> Result<()> {
     Ok(())
 }
 
-pub fn img_rotate() {
-
+pub fn img_rotate(img:DynamicImage, orientation:u32) -> DynamicImage {
+    let img = match orientation {
+        1 => img,
+        2 => img.flipv(),
+        3 => img.rotate180(),
+        4 => img.fliph(),
+        5 => img.flipv().rotate270(),
+        6 => img.rotate90(),
+        7 => img.flipv().rotate90(),
+        8 => img.rotate270(),
+        _ => img
+    };
+    img
 }
 
 pub fn get_orientation(img_bytes: &Vec<u8>) -> u32 {
