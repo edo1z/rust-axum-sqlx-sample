@@ -3,20 +3,26 @@ use exif::{In, Reader, Tag};
 use image::{guess_format, ImageFormat};
 use std::fs::File;
 use std::io::Cursor;
+use uuid::Uuid;
 
-pub fn img_upload(img_bytes: Vec<u8>) -> Result<()> {
+pub fn img_upload(img_bytes: Vec<u8>, save_path:&'static str) -> Result<()> {
     let orientation = get_orientation(&img_bytes);
     println!("orientaiton {orientation}");
     let (format, ext) = get_format_and_ext(&img_bytes)?;
+    let file_name = create_file_name(&ext);
     match image::load_from_memory_with_format(&img_bytes, format) {
         Ok(img) => {
             let new_img = img.thumbnail(300, 300).blur(2.0);
-            let mut output = File::create(format!("new_img.{ext}")).unwrap();
+            let mut output = File::create(file_name).unwrap();
             new_img.write_to(&mut output, format).unwrap();
         }
         Err(_) => return Err(AppError::InvalidFileFormat),
     }
     Ok(())
+}
+
+pub fn img_rotate() {
+
 }
 
 pub fn get_orientation(img_bytes: &Vec<u8>) -> u32 {
@@ -39,4 +45,12 @@ pub fn get_format_and_ext(img_bytes: &Vec<u8>) -> Result<(ImageFormat, &'static 
         Ok(ImageFormat::Gif) => return Ok((ImageFormat::Gif, "gif")),
         _ => return Err(AppError::InvalidFileFormat),
     };
+}
+
+pub fn create_file_name(ext:&'static str) -> String {
+    format!("{}.{}", Uuid::new_v4().to_hyphenated(), ext) 
+}
+
+pub fn save_gcp() {
+
 }

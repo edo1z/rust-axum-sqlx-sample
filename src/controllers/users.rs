@@ -37,7 +37,7 @@ pub async fn edit_prof_img(
         return Err(AppError::MultipartError(e.to_string()));
     }
     let (user_id, prof_img) = result.unwrap();
-    let result = img_upload(prof_img);
+    let result = img_upload(prof_img, "/");
     println!("user_id: {user_id} upload result {result:?}");
     let user = usecases::users::view(repo.clone(), 10).await?;
     Ok(Json(user))
