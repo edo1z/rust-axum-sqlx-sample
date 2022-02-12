@@ -2,17 +2,21 @@ User:
   type: "object"
   properties:
     id:
+      required: true
       type: "integer"
       format: "int32"
     name:
+      required: true
       type: "string"
     msg:
+      required: false
       type: "string"
     age:
+      required: false
       type: "integer"
       format: "int16"
 
-CreateUser:
+NewUser:
   required: 
   - name
   type: "object"
@@ -31,3 +35,21 @@ UserId:
     id:
       type: "integer"
       format: "int32"
+
+ProfImg:
+  type: object
+  properties:
+    user_id:
+      required: true
+      type: integer
+      format: int32
+    prof_img:
+      required: true
+      type: string
+      format: binary
+    
+ImgUrl:
+  type: object
+  properties:
+    url:
+      type: string

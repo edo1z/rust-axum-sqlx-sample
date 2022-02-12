@@ -9,7 +9,7 @@ pub async fn root() -> &'static str {
 #[cfg(test)]
 mod tests {
     use crate::router;
-    use crate::test::request;
+    use crate::tests::request;
     use axum::{body::Body, http::StatusCode};
 
     #[tokio::test]

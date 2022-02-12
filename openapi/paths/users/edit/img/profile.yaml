@@ -1,0 +1,17 @@
+post:
+  tags:
+    - "user"
+  summary: upload profile image
+  operationId: edit_user_image_profile
+  requestBody:
+    content:
+      multipart/form-data:
+        schema:
+          $ref: "../../../../schemas/user.yaml#/ProfImg"
+  responses: 
+    '200':
+      description: return userId
+      content:
+        application/json:
+          schema:
+            $ref: "../../../../schemas/user.yaml#/ImgUrl"

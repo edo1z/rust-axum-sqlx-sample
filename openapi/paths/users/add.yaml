@@ -8,7 +8,7 @@ post:
     content: 
       application/json:
         schema:
-            $ref: "../../schemas/user.yaml#/CreateUser"
+            $ref: "../../schemas/user.yaml#/NewUser"
   responses: 
     '200':
       description: return userId

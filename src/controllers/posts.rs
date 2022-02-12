@@ -12,6 +12,10 @@ pub async fn add() -> StatusCode {
     StatusCode::OK
 }
 
+pub async fn view() -> StatusCode {
+    StatusCode::OK
+}
+
 pub async fn edit() -> StatusCode {
     StatusCode::OK
 }

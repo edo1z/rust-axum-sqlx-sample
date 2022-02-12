@@ -7,7 +7,10 @@ mod error;
 mod models;
 mod repositories;
 mod router;
-mod test;
+mod services;
+#[cfg(test)]
+mod tests;
+mod usecases;
 
 #[tokio::main]
 async fn main() {

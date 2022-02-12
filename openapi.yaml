@@ -35,6 +35,25 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/user/User'
+  '/users/view/{userId}':
+    get:
+      tags:
+        - user
+      summary: view user
+      operationId: view_users
+      parameters:
+        - name: userId
+          in: path
+          description: user id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: return users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user/User'
   /users/add:
     post:
       tags:
@@ -46,7 +65,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/user/CreateUser'
+              $ref: '#/components/schemas/user/NewUser'
       responses:
         '200':
           description: return userId
@@ -54,6 +73,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/user/UserId'
+  /users/edit/img/prof:
+    post:
+      tags:
+        - user
+      summary: upload profile image
+      operationId: edit_user_image_profile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/user/ProfImg'
+      responses:
+        '200':
+          description: return userId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user/ImgUrl'
   /categories:
     get:
       tags:
@@ -141,16 +178,20 @@ components:
         type: object
         properties:
           id:
+            required: true
             type: integer
             format: int32
           name:
+            required: true
             type: string
           msg:
+            required: false
             type: string
           age:
+            required: false
             type: integer
             format: int16
-      CreateUser:
+      NewUser:
         required:
           - name
         type: object
@@ -168,6 +209,22 @@ components:
           id:
             type: integer
             format: int32
+      ProfImg:
+        type: object
+        properties:
+          user_id:
+            required: true
+            type: integer
+            format: int32
+          prof_img:
+            required: true
+            type: string
+            format: binary
+      ImgUrl:
+        type: object
+        properties:
+          url:
+            type: string
     category:
       Category:
         type: object
