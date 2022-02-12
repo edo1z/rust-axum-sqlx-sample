@@ -7,6 +7,7 @@ mod error;
 mod models;
 mod repositories;
 mod router;
+mod services;
 #[cfg(test)]
 mod tests;
 mod usecases;
