@@ -28,10 +28,10 @@ pub struct UserId {
     pub id: i32,
 }
 
-#[derive(Serialize, Deserialize, Debug, FromRow)]
+#[derive(Serialize)]
 pub struct ProfImg {
     pub user_id: i32,
-    pub base64_img: String,
+    pub prof_img: Vec<u8>,
 }
 
 #[derive(Serialize, Deserialize, Debug, FromRow)]

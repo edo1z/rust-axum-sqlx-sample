@@ -1,17 +1,18 @@
-use crate::error::{Result, AppError};
-use crate::models::user::{ImgUrl, NewUser, ProfImg, User, UserConditions, UserId, UserList};
+use crate::error::{AppError, Result};
+use crate::models::user::{NewUser, User, UserConditions, UserId, UserList};
 use crate::repositories::RepoExt;
 use crate::usecases;
+use anyhow::anyhow;
 use axum::{
-    extract::{Extension, Path, Query, Multipart},
+    extract::{ContentLengthLimit, Extension, Multipart, Path, Query},
     http::StatusCode,
     Json,
 };
 
-use image::{ImageFormat, guess_format};
-use std::io::Cursor;
-use std::fs::File;
 use exif::{In, Reader, Tag};
+use image::{guess_format, ImageFormat};
+use std::fs::File;
+use std::io::Cursor;
 
 pub async fn index(
     Query(conditions): Query<UserConditions>,
@@ -31,46 +32,56 @@ pub async fn add(Json(new_user): Json<NewUser>, Extension(repo): RepoExt) -> Res
     Ok(Json(user_id))
 }
 
+async fn _multipart_for_edit_prof_img(mut multipart: Multipart) -> anyhow::Result<(i32, Vec<u8>)> {
+    let mut user_id: Option<i32> = None;
+    let mut prof_img: Vec<u8> = vec![];
+    while let Some(field) = multipart.next_field().await? {
+        let name = field.name().unwrap_or("").to_string();
+        let bytes: Vec<u8> = field.bytes().await?.into_iter().collect();
+        match &*name {
+            "user_id" => user_id = Some(std::str::from_utf8(&bytes)?.parse()?),
+            "prof_img" => prof_img = bytes,
+            _ => return Err(anyhow!("Invalid Parameter")),
+        }
+    }
+    Ok((user_id.unwrap(), prof_img))
+}
+
 pub async fn edit_prof_img(
-    mut multipart: Multipart,
+    ContentLengthLimit(multipart): ContentLengthLimit<Multipart, { 5 * 1024 * 1024 }>,
     Extension(repo): RepoExt,
 ) -> Result<Json<User>> {
-    if let Some(field) = multipart.next_field().await.unwrap() {
-        let name = field.name().unwrap().to_string();
-        let data = field.bytes().await.unwrap();
-        println!("{name}: {:?}", data);
+    let result = _multipart_for_edit_prof_img(multipart).await;
+    if let Err(e) = result {
+        return Err(AppError::MultipartError(e.to_string()));
     }
+    let (user_id, prof_img) = result.unwrap();
 
-    if let Some(field) = multipart.next_field().await.unwrap() {
-        let data = field.bytes().await.unwrap();
-        let bytes:Vec<u8> = data.into_iter().collect();
-        let (format, ext) = match guess_format(&bytes) {
-            Ok(ImageFormat::Png) => Ok((ImageFormat::Png, "png")),
-            Ok(ImageFormat::Jpeg) => Ok((ImageFormat::Jpeg, "jpg")),
-            Ok(ImageFormat::Gif) => Ok((ImageFormat::Gif, "gif")),
-            _ => Err(AppError::InvalidFileFormat),
-        }?;
-        let mut buf = Cursor::new(&bytes);
-        let mut orientation = 1;
-        if let Ok(exif) = Reader::new().read_from_container(&mut buf) {
-            if let Some(o) = exif.get_field(Tag::Orientation, In::PRIMARY) {
-                if let Some(v @ 1..=8) = o.value.get_uint(0) {
-                    orientation = v;
-                }
-            }
-        }
-        println!("{orientation}");
-        match image::load_from_memory_with_format(&bytes, format) {
-            Ok(img) => {
-                let new_img = img.thumbnail(300, 300).blur(2.0);
-                let mut output = File::create(format!("new_img.{ext}")).unwrap();
-                new_img.write_to(&mut output, format).unwrap();
-            }
-            Err(_) => {
-                println!("Invalid File");
+    let (format, ext) = match guess_format(&prof_img) {
+        Ok(ImageFormat::Png) => Ok((ImageFormat::Png, "png")),
+        Ok(ImageFormat::Jpeg) => Ok((ImageFormat::Jpeg, "jpg")),
+        Ok(ImageFormat::Gif) => Ok((ImageFormat::Gif, "gif")),
+        _ => Err(AppError::InvalidFileFormat),
+    }?;
+    let mut buf = Cursor::new(&prof_img);
+    let mut orientation = 1;
+    if let Ok(exif) = Reader::new().read_from_container(&mut buf) {
+        if let Some(o) = exif.get_field(Tag::Orientation, In::PRIMARY) {
+            if let Some(v @ 1..=8) = o.value.get_uint(0) {
+                orientation = v;
             }
         }
     }
+    println!("{orientation}");
+    match image::load_from_memory_with_format(&prof_img, format) {
+        Ok(img) => {
+            let new_img = img.thumbnail(300, 300).blur(2.0);
+            let mut output = File::create(format!("new_img.{ext}")).unwrap();
+            new_img.write_to(&mut output, format).unwrap();
+        }
+        Err(_) => return Err(AppError::InvalidFileFormat),
+    }
+    println!("user_id: {user_id}");
     let user = usecases::users::view(repo.clone(), 10).await?;
     Ok(Json(user))
 }
