@@ -12,15 +12,15 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
   api:
-      build: ./api
-      ports:
-        - '8085:8080'
-      depends_on:
-        - db
-      volumes:
-        - ..:/app
-        - cargo-cache:/app/target
-      command: /bin/sh -c "cargo watch -x run"
+    build: ./api
+    ports:
+      - '8085:8080'
+    depends_on:
+      - db
+    volumes:
+      - ..:/app
+      - cargo-cache:/app/target
+    command: /bin/sh -c "cargo watch -x run"
   mailhog:
     image: mailhog/mailhog
     ports:
@@ -31,9 +31,9 @@ services:
     ports:
       - 8001:8080
     volumes:
-      - ../openapi.yaml:/openapi.yaml
+      - ../openapi:/openapi
     environment:
-      SWAGGER_JSON: /openapi.yaml
+      SWAGGER_JSON: /openapi/openapi.yaml
 volumes:
   db_data:
   cargo-cache:

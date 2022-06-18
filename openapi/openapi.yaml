@@ -1,14 +1,10 @@
-openapi: '3.0.1'
+openapi: "3.0.1"
 info:
-  title: 'Rust Axum+SQLx Sample'
-  description: ''
+  title: "Rust Axum+SQLx Sample"
+  description: ""
   version: 0.0.1
 servers:
   - url: http://localhost:8085
-schemes: 
-  - http
-produces:
-  - application/json
 tags:
   - name: user
   - name: category

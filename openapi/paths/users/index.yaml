@@ -1,5 +1,5 @@
 get:
-  tags: 
+  tags:
     - "user"
   summary: get 10 users
   operationId: get_users
@@ -9,12 +9,12 @@ get:
       description: "user name"
       required: false
       type: "string"
-  responses: 
-    '200':
+  responses:
+    "200":
       description: return users
       content:
         application/json:
           schema:
             type: "array"
-            items: 
+            items:
               $ref: "../../schemas/user.yaml#/User"
